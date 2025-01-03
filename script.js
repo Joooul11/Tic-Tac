@@ -9,9 +9,9 @@ const xScoreElement = document.getElementById('x-score');
 const oScoreElement = document.getElementById('o-score');
 
 const winningCombinations = [
-    [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
-    [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
-    [0, 4, 8], [2, 4, 6] // diagonals
+    [0, 1, 2], [3, 4, 5], [6, 7, 8], 
+    [0, 3, 6], [1, 4, 7], [2, 5, 8], 
+    [0, 4, 8], [2, 4, 6] 
 ];
 
 cells.forEach(cell => {
@@ -32,18 +32,24 @@ function handleClick(event) {
         gameActive = false;
         status.textContent = `${currentPlayer} Wins!`;
         updateScore(currentPlayer);
-        return;
+        setTimeout(() => {
+            ResetButton();
+        }, 2000);
     }
 
     if (checkDraw()) {
         gameActive = false;
         status.textContent = "It's a Draw!";
+        setTimeout(() => {
+            ResetButton();
+        }, 2000); // Reset after 2 seconds
         return;
     }
 
     isXNext = !isXNext;
     status.textContent = `${isXNext ? 'X' : 'O'}'s turn`;
 }
+
 
 function checkWin(player) {
     return winningCombinations.some(combination => {
@@ -57,7 +63,11 @@ function checkDraw() {
     return [...cells].every(cell => cell.textContent);
 }
 
+
 function updateScore(winner) {
+    const scoreElement = winner === 'X' ? xScoreElement : oScoreElement;
+    const scoreContainer = scoreElement.closest('.score');
+    
     if (winner === 'X') {
         xScore++;
         xScoreElement.textContent = xScore;
@@ -65,6 +75,11 @@ function updateScore(winner) {
         oScore++;
         oScoreElement.textContent = oScore;
     }
+
+    scoreContainer.classList.add('updated');
+    setTimeout(() => {
+        scoreContainer.classList.remove('updated');
+    }, 300);
 }
 
 function ResetButton() {
